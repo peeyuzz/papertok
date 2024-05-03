@@ -1,0 +1,7 @@
+opencv-python
+moviepy
+openai-whisper
+pyttsx3
+PyPDF2
+google.generativeai
+python-dotenv
