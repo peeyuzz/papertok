@@ -18,9 +18,10 @@ def main():
     print("Text extracted")
 
     script = generate_script("script.txt", pdf_text)
+
     cleanedScript = remove_enclosed_words(script)
 
-    voiceOver = create_voice_over("voiceOver.mp3", cleanedScript) 
+    voiceOver = create_voice_over("voiceOver.wav", cleanedScript) 
 
     result = generate_captions(voiceOver)
 
@@ -28,9 +29,9 @@ def main():
 
     delete_folder_contents("frames")
 
-    folder_path, fps = extract_frames("background.mp4", "voiceOver.mp3", "frames", text_lines)
+    folder_path, fps = extract_frames("background.mp4", "voiceOver.wav", "frames", text_lines)
 
-    compiling_output(folder_path, "voiceOver.mp3", "output.mp4", fps)
+    compiling_output(folder_path, "voiceOver.wav", "output.mp4", fps)
 
     delete_folder_contents("frames")
 

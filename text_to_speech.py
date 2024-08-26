@@ -1,9 +1,16 @@
-import pyttsx3
+from gtts import gTTS
 
 def create_voice_over(fileName, text):
-    print("Creating voiceover...")
-    engine = pyttsx3.init()
-    engine.save_to_file(text, fileName)
-    engine.runAndWait()
-    print(f"Voiceover saved to {fileName}")
-    return fileName
+    if not text.strip():
+        print("Error: The text input is empty.")
+        return None
+    
+    try:
+        print("Creating voiceover...")
+        tts = gTTS(text)
+        tts.save(fileName)
+        print(f"Voiceover saved to {fileName}")
+        return fileName
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None

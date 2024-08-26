@@ -1,7 +1,9 @@
+numpy
 opencv-python
 moviepy
 openai-whisper
 pyttsx3
 PyPDF2
-google.generativeai
+google-generativeai
 python-dotenv
+gtts
