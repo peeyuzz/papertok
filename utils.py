@@ -3,7 +3,13 @@ import shutil
 import re
 
 def remove_enclosed_words(script):
-    return re.sub(r'\*\*(.*?)\*\*', '', script)
+    # Remove text enclosed in double asterisks
+    script = re.sub(r'\*\*(.*?)\*\*', '', script)
+    # Remove text enclosed in brackets (e.g., [text])
+    script = re.sub(r'\[.*?\]', '', script)
+    # Remove emojis (this regex captures a wide range of emojis)
+    script = re.sub(r'[^\w\s,]', '', script)
+    return script
 
 def delete_folder_contents(folder_path):
   print(f"Deleting all files in {folder_path}")
