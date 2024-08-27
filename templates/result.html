@@ -4,12 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .loading-ring {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+        }
+        .loading-ring:after {
+            content: " ";
+            display: block;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border-radius: 50%;
+            border: 6px solid #008CBA;
+            border-color: #008CBA transparent #008CBA transparent;
+            animation: loading-ring 1.2s linear infinite;
+        }
+        @keyframes loading-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        #video-container {
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 <body>
-    <h1>Generated Video</h1>
-    <video width="640" height="480" controls>
-        <source src="{{ video_path }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+    <div class="container">
+        <h1>Generated Video</h1>
+        <div id="loading">
+            <p>Processing your PDF. This may take a few minutes...</p>
+            <div class="loading-ring"></div>
+        </div>
+        <div id="video-container" style="display: none;">
+            <video width="640" height="480" controls>
+                <source id="video-source" src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+    <script>
+        function checkStatus() {
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'complete') {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('video-container').style.display = 'block';
+                        document.getElementById('video-source').src = data.output_path;
+                        document.querySelector('video').load();
+                    } else {
+                        setTimeout(checkStatus, 10000);  // Check again after 5 seconds
+                    }
+                });
+        }
+        checkStatus();
+    </script>
 </body>
 </html>

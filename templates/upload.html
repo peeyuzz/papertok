@@ -4,12 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 1rem;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-upload {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .file-upload:hover {
+            background-color: #45a049;
+        }
+        input[type="submit"] {
+            margin-top: 1rem;
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #007B9A;
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload a PDF file</h1>
-    <form method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".pdf">
-        <input type="submit" value="Upload">
-    </form>
+    <div class="container">
+        <h1>Upload a PDF file</h1>
+        <form method="post" enctype="multipart/form-data">
+            <label for="file-upload" class="file-upload">
+                Choose file
+            </label>
+            <input id="file-upload" type="file" name="file" accept=".pdf">
+            <br>
+            <input type="submit" value="Upload">
+        </form>
+    </div>
+    <script>
+        document.getElementById('file-upload').addEventListener('change', function() {
+            let fileName = this.files[0].name;
+            document.querySelector('.file-upload').textContent = fileName;
+        });
+    </script>
 </body>
 </html>

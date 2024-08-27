@@ -1,7 +1,7 @@
-
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, jsonify
 from werkzeug.utils import secure_filename
 import os
+import threading
 from script_generator import *
 from text_to_speech import *
 from caption_generator import *
@@ -18,7 +18,13 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# Global variable to track video processing status
+video_status = {'status': 'idle', 'output_path': None}
+
 def process_pdf(pdf_file_path):
+    global video_status
+    video_status['status'] = 'processing'
+    
     print("Extracting text from PDF file...")
     reader = PdfReader(pdf_file_path)
     page_texts = []
@@ -38,10 +44,13 @@ def process_pdf(pdf_file_path):
     output_path = "static/output.mp4"
     compiling_output(folder_path, "voiceOver.wav", output_path, fps)
     delete_folder_contents("frames")
-    return output_path
+    
+    video_status['status'] = 'complete'
+    video_status['output_path'] = output_path
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
+    global video_status
     if request.method == 'POST':
         if 'file' not in request.files:
             return 'No file part'
@@ -52,9 +61,14 @@ def upload_file():
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
-            output_path = process_pdf(file_path)
-            return render_template('result.html', video_path=output_path)
+            video_status = {'status': 'processing', 'output_path': None}
+            threading.Thread(target=process_pdf, args=(file_path,)).start()
+            return render_template('result.html')
     return render_template('upload.html')
+
+@app.route('/status')
+def get_status():
+    return jsonify(video_status)
 
 if __name__ == '__main__':
     app.run(debug=True)
