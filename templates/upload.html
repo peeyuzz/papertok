@@ -60,7 +60,7 @@
 <body>
     <div class="container">
         <h1>Upload a PDF file</h1>
-        <form method="post" enctype="multipart/form-data">
+        <form action="/uploadfile/" enctype="multipart/form-data" method="post">
             <label for="file-upload" class="file-upload">
                 Choose file
             </label>
@@ -73,6 +73,18 @@
         document.getElementById('file-upload').addEventListener('change', function() {
             let fileName = this.files[0].name;
             document.querySelector('.file-upload').textContent = fileName;
+        });
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            fetch('/uploadfile/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.href = '/result';
+            });
         });
     </script>
 </body>

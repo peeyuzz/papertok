@@ -78,7 +78,7 @@
                         document.getElementById('video-source').src = data.output_path;
                         document.querySelector('video').load();
                     } else {
-                        setTimeout(checkStatus, 10000);  // Check again after 5 seconds
+                        setTimeout(checkStatus, 5000);  // Check again after 5 seconds
                     }
                 });
         }
